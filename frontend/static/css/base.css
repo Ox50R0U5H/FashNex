@@ -1,0 +1,64 @@
+/* ============================================
+   Base Styles for FASHNEX
+   ============================================ */
+
+/* Reset & Base Typography */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Vazirmatn", Tahoma, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Links */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Buttons */
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+    outline: 2px solid #456882;
+    outline-offset: 2px;
+}
+

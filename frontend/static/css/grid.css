@@ -1,0 +1,12 @@
+@media (min-width: 768px){
+  .grid12{
+    display:grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 14px;
+  }
+
+  .d-col-12{ grid-column: span 12; }
+  .d-col-8{ grid-column: span 8; }
+  .d-col-6{ grid-column: span 6; }
+  .d-col-4{ grid-column: span 4; }
+}

@@ -1,0 +1,81 @@
+<header class="header nav--fancy" role="banner">
+  <div class="container nav__inner header__row">
+
+    <div class="header__left">
+      <a class="brand" href="{% url 'home' %}" aria-label="خانه فشن‌نِکست">
+        <div class="brand__logo" aria-hidden="true"><span class="mark">FN</span></div>
+        <div class="brand__name">فشن‌نِکست</div>
+      </a>
+    </div>
+
+    <nav class="header__center" aria-label="ناوبری اصلی">
+      <a class="nav__link btn btn--nav" href="{% url 'home' %}">خانه</a>
+      <a class="nav__link btn btn--nav" href="#how">نحوهٔ کار</a>
+      <a class="nav__link btn btn--nav" href="#features">ویژگی‌ها</a>
+      <a class="nav__link btn btn--nav" href="#brands">برندها</a>
+    </nav>
+
+    <div class="header__right nav__actions">
+      {% if request.user.is_authenticated %}
+        <a class="btn btn--secondary" href="{% url 'users:logout' %}">خروج</a>
+      {% else %}
+        <a class="btn btn--secondary" href="{% url 'users:login' %}">ورود</a>
+        <a class="btn btn--primary" href="{% url 'users:signup_customer' %}">ثبت‌نام</a>
+      {% endif %}
+
+      <button class="icon-btn" id="nav-toggle"
+              aria-controls="nav-drawer" aria-expanded="false"
+              aria-label="باز/بستن منو">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div class="nav__drawer" id="nav-drawer" aria-hidden="true">
+    <div class="nav__drawer-inner container">
+      <a class="nav__link btn btn--nav" href="{% url 'home' %}">خانه</a>
+      <a class="nav__link btn btn--nav" href="#how">نحوهٔ کار</a>
+      <a class="nav__link btn btn--nav" href="#features">ویژگی‌ها</a>
+      <a class="nav__link btn btn--nav" href="#brands">برندها</a>
+
+      <hr />
+
+      {% if request.user.is_authenticated %}
+        <a class="btn" href="{% url 'users:logout' %}">خروج</a>
+      {% else %}
+        <a class="nav__link btn btn--nav" href="{% url 'users:login' %}">ورود</a>
+        <a class="nav__link btn btn--nav" href="{% url 'users:signup_customer' %}">ثبت‌نام</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Drawer toggle (بدون نیاز به فایل JS جدا) -->
+  <script>
+    (function () {
+      const btn = document.getElementById("nav-toggle");
+      const drawer = document.getElementById("nav-drawer");
+      if (!btn || !drawer) return;
+
+      function setOpen(open) {
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        drawer.classList.toggle('is-open', !!open);
+        drawer.setAttribute('aria-hidden', String(!open));
+      }
+
+      btn.addEventListener("click", function () {
+        const open = btn.getAttribute("aria-expanded") === "true";
+        setOpen(!open);
+      });
+
+      // بستن با کلیک بیرون (فقط در موبایل)
+      document.addEventListener("click", function (e) {
+        const within = drawer.contains(e.target) || btn.contains(e.target);
+        if (!within && drawer.classList.contains('is-open') && window.innerWidth < 768) setOpen(false);
+      });
+    })();
+  </script>
+</header>

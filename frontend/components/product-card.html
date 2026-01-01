@@ -1,0 +1,14 @@
+{% load static %}
+<div class="product" role="article">
+  {% if p and p.image %}
+    <img class="product__img product__img--real" src="{{ p.image.url }}" alt="{{ p.title }}" onload="this.classList.add('loaded')">
+  {% else %}
+    <img class="product__img product__img--real" src="{% static 'images/placeholder.svg' %}" alt="placeholder">
+  {% endif %}
+
+  <div class="price-badge">{{ price|default:p.price }} تومان</div>
+
+  <div class="product__meta">
+    <div class="product__title">{{ title|default:p.title }}</div>
+  </div>
+</div>

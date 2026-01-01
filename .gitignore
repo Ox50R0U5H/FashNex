@@ -1,0 +1,25 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+
+# venv
+.venv/
+venv/
+
+# env
+.env
+.env.*
+
+# Django media
+media/
+
+# node / build (اگه داشتی)
+node_modules/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db

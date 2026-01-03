@@ -21,7 +21,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from apps.catalog.models import Vendor, Product  # اگر مسیرت apps.catalog بود بگو تا درستش کنم
-from apps.catalog.views import styles_api
 
 def home_view(request):
     best_sellers = Product.objects.filter(is_best_seller=True).select_related("vendor").order_by("-created_at")[:10]
@@ -37,7 +36,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", home_view, name="home"),
     path("auth/", include(("apps.users.urls", "users"), namespace="users")),
-    path("api/styles/", styles_api, name="api_styles"),
+    path("api/", include("apps.landing.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

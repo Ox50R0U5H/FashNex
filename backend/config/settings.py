@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,9 +45,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'apps.users',
     'apps.catalog',
+    'apps.landing',
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -136,6 +139,11 @@ AUTH_USER_MODEL = "users.User"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-# Media files (user uploads)
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/backend/"
+MEDIA_ROOT = BASE_DIR / "backend"
+
+REST_FRAMEWORK = {
+    "DEFAULT_EXCEPTION_HANDLER": "apps.landing.exceptions.api_exception_handler",
+}
+
+CORS_ALLOW_ALL_ORIGINS = True

@@ -66,20 +66,19 @@ body {
 
 .logo {
     position: absolute;
-    left: 50%;
+    left: 55%;
     top: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 64px;
-    height: 64px;
+    width: 100px; /* بزرگتر شد */
+    height: 100px;/* بزرگتر شد */
     border-radius: 50%;
     background: #fff;
     padding: 4px;
-    box-shadow: 0 8px 22px rgba(27,60,83,0.06);
     z-index: 2;
-} 
+}
 
 .logo-image {
     width: 100%;
@@ -157,59 +156,60 @@ body {
     position: relative;
 }
 
+/* کانتینر اصلی اسلایدر با پس‌زمینه سفید */
 .slider-container {
     position: relative;
     width: 100%;
-    height: 240px; /* slightly taller for a more prominent card */
-    overflow-x: auto;
+    height: 240px;
+    overflow-x: auto; /* اسکرول افقی را فعال می‌کند */
     overflow-y: hidden;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x mandatory; /* باعث چسبیدن اسلایدها هنگام اسکرول می‌شود */
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    scrollbar-width: none; /* مخفی کردن اسکرول‌بار */
     scroll-behavior: smooth;
-    padding: 14px 18px;
+    padding: 14px 0; /* << مهم: پدینگ افقی حذف شده تا بنرها به لبه بچسبند */
     margin: 0;
     background: #fff;
     border-radius: 18px;
     box-shadow: 0 6px 18px rgba(27,60,83,0.08);
-}  
+}
+
 
 .slider-container::-webkit-scrollbar {
     display: none;
 }
 
+/* ردیفی که اسلایدها در آن قرار دارند */
 .slider-track {
     display: flex;
-    gap: 16px;
+    gap: 16px; /* << مهم: این خط فاصله بین بنرها را ایجاد می‌کند */
     height: 100%;
     width: max-content;
+    /* این خط در ابتدا و انتهای کل اسلایدر فاصله ایجاد می‌کند */
+    padding: 0 18px;
 }
 
+/* هر کارت بنر به صورت جداگانه */
 .slide {
-    min-width: 82%;
-    max-width: 82%;
+    /* << مهم: عرض 82% باعث می‌شود قسمتی از بنر بعدی دیده شود */
     width: 82%;
+    flex-shrink: 0; /* جلوگیری از کوچک شدن اسلایدها */
     height: 100%;
-    display: block;
     position: relative;
-    padding: 0;
-    overflow: hidden;
+    overflow: hidden; /* << مهم: تصویر را داخل گوشه‌های گرد نگه می‌دارد */
     border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(27, 60, 83, 0.08);
-    scroll-snap-align: center;
-    flex-shrink: 0;
-}  
+    scroll-snap-align: center; /* اسلاید فعال را در مرکز قرار می‌دهد */
+}
 
+/* تصویر داخل هر کارت بنر */
 .slide-banner {
     width: 100%;
     height: 100%;
+    /* << مهم: تصویر کل کادر را پر می‌کند و مشکل صفحه سفید را حل می‌کند */
     object-fit: cover;
-    object-position: right center; /* prefer right-centric subjects like in the design */
+    object-position: center;
     display: block;
-    border-radius: 14px;
-    z-index: 0;
-    background-color: #f2efe9;
-}  
+}
 
 .slide::before {
     content: '';
@@ -590,20 +590,19 @@ body {
 }
 
 .carousel-btn {
-    background: #456882;
-    color: #fff;
+    background: transparent;    /* حذف پس‌زمینه */
+    color: #1B3C53;             /* رنگ فلش‌ها مطابق با رنگ عناوین */
     border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    font-size: 24px;
+    font-size: 48px;            /* بزرگ‌تر کردن فلش */
+    font-weight: 100;           /* نازک کردن فلش */
     cursor: pointer;
-    display: none; /* Hidden on mobile */
+    display: flex;              /* ✅ کلید اصلی: نمایش دکمه در موبایل */
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
     flex-shrink: 0;
     z-index: 10;
+    padding: 0 8px;
 }
 
 .carousel-btn:hover {
@@ -637,6 +636,8 @@ body {
     scroll-snap-align: start;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column; /* allow info area to position price at the bottom */
 }
 
 .product-card:hover {
@@ -650,8 +651,10 @@ body {
     padding-top: 100%; /* 1:1 aspect ratio */
     background: #F9F3EF;
     overflow: hidden;
+    flex: 1 0 auto; /* let image area grow to fill card */
 }
 
+/* legacy class (if any image uses .product-image) */
 .product-image {
     position: absolute;
     top: 0;
@@ -659,6 +662,25 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* ✅ NEW: images rendered by JS use class "media-img" */
+.product-image-wrapper .media-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;       /* makes uploaded images fit like before */
+    object-position: center;
+    display: block;
+}
+
+/* ✅ NEW: placeholder must also fill the padded wrapper */
+.product-image-wrapper .placeholder-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .placeholder-image {
@@ -701,6 +723,7 @@ body {
 
 .product-info {
     padding: 12px;
+    text-align: center; /* ✅ کلید اصلی: متن (عنوان و قیمت) را وسط‌چین می‌کند */
 }
 
 .product-name {
@@ -715,6 +738,10 @@ body {
     font-size: 16px;
     font-weight: 700;
     color: #456882;
+    /* 
+      با حذف position: absolute، قیمت به صورت طبیعی زیر عنوان قرار می‌گیرد 
+      و از text-align والد خود (product-info) تبعیت می‌کند.
+    */
 }
 
 /* Style Card (Similar to product card but with description) */
@@ -737,6 +764,7 @@ body {
 
 .style-info {
     padding: 12px;
+    text-align: center; /* ✅ این خط همه چیز را در مرکز قرار می‌دهد */
 }
 
 .style-name {
@@ -841,12 +869,25 @@ body {
    (I) Support Section
    ============================================ */
 .support-section {
+    position: relative;
     margin: 40px 0;
     background: #D2C1B6;
     border-radius: 16px;
     padding: 24px;
     overflow: visible;
-} 
+}
+
+.support-corner-logo {
+  position: absolute;
+  top: -50px; /* کمی بالاتر برده شد تا با اندازه جدید هماهنگ باشد */
+  left: 15px;  /* به چپ منتقل شد */
+  width: 140px;   /* بزرگتر شد */
+  height: 140px;  /* بزرگتر شد */
+  object-fit: contain;
+  z-index: 6;
+  transform: rotate(-35deg); /* چرخش ثابت است */
+}
+
 
 .support-container {
     display: flex;
@@ -1276,26 +1317,149 @@ body {
 @media (min-width: 1024px) {
     .main-content {
         padding: 0 24px;
+        max-width: 1400px;
     }
 
-    .slider-container {
-        height: 400px;
+    /* Header adjustments for desktop */
+    .top-navbar {
+        height: 110px;
+    }
+
+    .navbar-container {
         padding: 0 24px;
+        gap: 20px;
+        align-items: center;
+    }
+
+    /* Make the logo participate in normal flow (no absolute overlap) */
+    .logo {
+        position: static;
+        transform: none;
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-inline-start: 8px;
+        margin-inline-end: 8px;
+    }
+
+    .logo-image {
+        width: 140px;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .cart-btn {
+        order: 0;
+        margin-inline-start: 12px;
+        margin-inline-end: 12px;
+    }
+
+    .login-btn {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+
+    /* Center the search bar on wide screens */
+    .search-container {
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    .search-input {
+        padding: 14px 56px 14px 16px;
+        font-size: 15px;
+    }
+
+   .slider-container {
+        height: 420px;
+        padding: 0 36px;
+        background: transparent; /* پس‌زمینه را شفاف می‌کند */
+        box-shadow: none;      /* سایه کانتینر را حذف می‌کند */
+    }
+
+    /* Show 3 slides in hero on large screens with consistent gaps */
+    .slider-track {
+        display: flex;
+        gap: 28px;
     }
 
     .slide {
-        min-width: calc(33.333% - 48px);
-        max-width: calc(33.333% - 48px);
-        width: calc(33.333% - 48px);
+        min-width: calc(33.333% - 18px);
+        max-width: calc(33.333% - 18px);
+        width: calc(33.333% - 18px);
         scroll-snap-align: start;
+        border-radius: 18px;
     }
 
+    .slide-text h2 {
+        font-size: 36px;
+    }
+
+    /* Carousel & grid tweaks */
     .product-card,
     .style-card {
-        min-width: calc(25% - 15px);
-        max-width: calc(25% - 15px);
+        min-width: calc(25% - 20px);
+        max-width: calc(25% - 20px);
+    }
+
+    .carousel-container {
+        overflow-x: hidden;
+        gap: 24px;
+        justify-content: flex-start;
+    }
+
+    .categories-container {
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .category-card {
+        min-width: 220px;
+        width: 220px;
+    }
+
+    /* Support section becomes a row with visible logo */
+    .support-container {
+        flex-direction: row;
+        align-items: center;
+        gap: 32px;
+    }
+
+    .logo-circle {
+        display: flex;
+    }
+
+    /* Footer gets more space on desktop */
+    .footer-container {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 40px;
+    }
+
+    /* Make carousel navigation visible and larger */
+    .carousel-btn {
+        display: flex;
+        width: 44px;
+        height: 44px;
+    }
+
+    .carousel-btn:hover {
+        transform: translateY(0) scale(1.05);
+    }
+
+    /* Slightly increase seller card size for readability */
+    .seller-card {
+        min-width: 220px;
+        max-width: 220px;
     }
 }
+
 
 /* ============================================
    Utility Classes
@@ -1311,4 +1475,16 @@ body {
     white-space: nowrap;
     border-width: 0;
 }
+.ai-image{
+  overflow: hidden;
+}
+
+.ai-image .ai-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
 

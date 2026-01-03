@@ -4,142 +4,35 @@
    ============================================ */
 
 // ============================================
-// Mock Data
+// API
 // ============================================
+const API_BASE = "http://127.0.0.1:8000";
+const HOME_ENDPOINT = `${API_BASE}/api/home/`;
 
+// ============================================
+// Mock Data (ONLY categories stays mock for now)
+// ============================================
 const mockData = {
-    categories: [
-        {
-            id: 1,
-            namePersian: "زنانه",
-            nameEnglish: "WOMEN'S CLOTHING",
-            image: "linear-gradient(135deg, #D2C1B6 0%, #F9F3EF 100%)"
-        },
-        {
-            id: 2,
-            namePersian: "مردانه",
-            nameEnglish: "MEN'S CLOTHING",
-            image: "linear-gradient(135deg, #1B3C53 0%, #456882 100%)"
-        },
-        {
-            id: 3,
-            namePersian: "کودک",
-            nameEnglish: "KIDS CLOTHING",
-            image: "linear-gradient(135deg, #D2C1B6 0%, #456882 100%)"
-        }
-    ],
-    products: [
-        {
-            id: 1,
-            name: "ترنچ کت نیلیا",
-            price: 799000,
-            image: "linear-gradient(135deg, #D2C1B6 0%, #F9F3EF 100%)"
-        },
-        {
-            id: 2,
-            name: "هودی ایلیا",
-            price: 690000,
-            image: "linear-gradient(135deg, #456882 0%, #1B3C53 100%)"
-        },
-        {
-            id: 3,
-            name: "تیشرت بچگانه",
-            price: 350000,
-            image: "linear-gradient(135deg, #D2C1B6 0%, #456882 100%)"
-        },
-        {
-            id: 4,
-            name: "کاپشن زمستانی",
-            price: 1200000,
-            image: "linear-gradient(135deg, #1B3C53 0%, #456882 100%)"
-        },
-        {
-            id: 5,
-            name: "شلوار جین",
-            price: 450000,
-            image: "linear-gradient(135deg, #D2C1B6 0%, #F9F3EF 100%)"
-        },
-        {
-            id: 6,
-            name: "کت و شلوار مجلسی",
-            price: 2500000,
-            image: "linear-gradient(135deg, #456882 0%, #1B3C53 100%)"
-        }
-    ],
-    styles: [
-        {
-            id: 1,
-            name: "استایل روزانه زنانه",
-            description: "(شامل : کت ، شلوار ، کیف ، شال)",
-            price: 2000000,
-            image: "../../static/images/styles/dailyWemanStyle.png"
-        },
-        {
-            id: 2,
-            name: "استایل زمستانی مردانه",
-            description: "(شامل : دورس ، پافر (شلوار))",
-            price: 1000000,
-            image: "linear-gradient(135deg, #456882 0%, #1B3C53 100%)"
-        },
-        {
-            id: 3,
-            name: "استایل زمستانی بچگانه",
-            description: "(شامل : ترنج کت ، هودی کلاه)",
-            price: 1500000,
-            image: "linear-gradient(135deg, #D2C1B6 0%, #456882 100%)"
-        },
-        {
-            id: 4,
-            name: "استایل مجلسی زنانه",
-            description: "(شامل : لباس مجلسی ، کفش ، کیف)",
-            price: 3500000,
-            image: "linear-gradient(135deg, #1B3C53 0%, #456882 100%)"
-        },
-        {
-            id: 5,
-            name: "استایل ورزشی",
-            description: "(شامل : لباس ورزشی ، کفش)",
-            price: 800000,
-            image: "linear-gradient(135deg, #D2C1B6 0%, #F9F3EF 100%)"
-        }
-    ],
-    sellers: [
-        {
-            id: 1,
-            name: "فروشگاه آرتین",
-            rating: 4.4,
-            satisfaction: 95,
-            image: "../../static/images/sellers/shop-building-vector-icon-illustration.jpg"
-        },
-        {
-            id: 2,
-            name: "مزون برجیس",
-            rating: 4.4,
-            satisfaction: 90,
-            image: "../../static/images/sellers/shop-building-vector-icon-illustration.jpg"
-        },
-        {
-            id: 3,
-            name: "آرینا کالکشن",
-            rating: 4.4,
-            satisfaction: 100,
-            image: "../../static/images/sellers/shop-building-vector-icon-illustration.jpg"
-        },
-        {
-            id: 4,
-            name: "بوتیک سارا",
-            rating: 4.6,
-            satisfaction: 92,
-            image: "../../static/images/sellers/shop-building-vector-icon-illustration.jpg"
-        },
-        {
-            id: 5,
-            name: "فشن استایل",
-            rating: 4.3,
-            satisfaction: 88,
-            image: "../../static/images/sellers/shop-building-vector-icon-illustration.jpg"
-        }
-    ]
+  categories: [
+    {
+      id: 1,
+      namePersian: "زنانه",
+      nameEnglish: "WOMEN'S CLOTHING",
+      image: "/static/images/categories/weman.png",
+    },
+    {
+      id: 2,
+      namePersian: "مردانه",
+      nameEnglish: "MEN'S CLOTHING",
+      image: "/static/images/categories/men.png",
+    },
+    {
+      id: 3,
+      namePersian: "کودک",
+      nameEnglish: "KIDS CLOTHING",
+      image: "/static/images/categories/kids.png",
+    },
+  ],
 };
 
 // ============================================
@@ -150,17 +43,68 @@ const mockData = {
  * Format number to Persian currency format (تومان)
  */
 function formatPrice(price) {
-    return new Intl.NumberFormat('fa-IR').format(price) + ' تومان';
+  const n = Number(price);
+  if (!Number.isFinite(n)) return "";
+  return new Intl.NumberFormat("fa-IR").format(n) + " تومان";
 }
 
 /**
- * Create a placeholder image div
+ * Detect if a string looks like an image URL/path.
  */
-function createPlaceholderImage(gradient = "linear-gradient(135deg, #D2C1B6 0%, #F9F3EF 100%)") {
-    const img = document.createElement('div');
-    img.className = 'placeholder-image';
-    img.style.background = gradient;
-    return img;
+function isImageUrl(value) {
+  if (!value || typeof value !== "string") return false;
+  const v = value.trim();
+  if (!v) return false;
+  if (v.startsWith("http://") || v.startsWith("https://")) return true;
+  // relative paths to images
+  return /\.(png|jpe?g|webp|gif|svg)$/i.test(v) || v.startsWith("/media/") || v.startsWith("/static/") || v.includes("/media/");
+}
+
+/**
+ * Create a placeholder image div (gradient background)
+ */
+function createPlaceholderImage(
+  gradient = "linear-gradient(135deg, #D2C1B6 0%, #F9F3EF 100%)"
+) {
+  const img = document.createElement("div");
+  img.className = "placeholder-image";
+  img.style.background = gradient;
+  return img;
+}
+
+/**
+ * Create a media element: <img> if URL is available, otherwise placeholder div with gradient.
+ * Returns HTML string.
+ */
+function createMediaHTML(srcOrGradient, altText = "") {
+  if (isImageUrl(srcOrGradient)) {
+    const safeAlt = (altText || "").replaceAll('"', "&quot;");
+    return `<img src="${srcOrGradient}" alt="${safeAlt}" class="media-img" loading="lazy" />`;
+  }
+  // fallback to gradient placeholder (keep your existing look)
+  return createPlaceholderImage(
+    srcOrGradient ||
+      "linear-gradient(135deg, #D2C1B6 0%, #F9F3EF 100%)"
+  ).outerHTML;
+}
+
+/**
+ * Safe set innerHTML
+ */
+function setHTML(el, html) {
+  if (!el) return;
+  el.innerHTML = html;
+}
+
+/**
+ * Fetch home data from backend
+ */
+async function fetchHomeData() {
+  const res = await fetch(HOME_ENDPOINT, { method: "GET" });
+  if (!res.ok) {
+    throw new Error(`Home API failed: ${res.status}`);
+  }
+  return await res.json();
 }
 
 // ============================================
@@ -172,271 +116,322 @@ let slideInterval;
 let sliderContainer;
 
 function initHeroSlider() {
-    sliderContainer = document.querySelector('.slider-container');
-    const track = document.getElementById('sliderTrack');
-    const dots = document.querySelectorAll('.slider-dots .dot');
-    const slides = document.querySelectorAll('.slide');
-    const totalSlides = slides.length;
+  sliderContainer = document.querySelector(".slider-container");
+  const dots = document.querySelectorAll(".slider-dots .dot");
+  const slides = document.querySelectorAll(".slide");
+  const totalSlides = slides.length;
 
-    // Update active dot based on scroll position
-    function updateActiveDot() {
-        if (!sliderContainer || !slides.length) return;
-        const scrollLeft = sliderContainer.scrollLeft;
-        const containerWidth = sliderContainer.offsetWidth;
-        
-        // Calculate which slide is most visible
-        let currentIndex = 0;
-        let minDistance = Infinity;
-        
-        slides.forEach((slide, index) => {
-            const slideLeft = slide.offsetLeft - sliderContainer.scrollLeft;
-            const slideCenter = slideLeft + slide.offsetWidth / 2;
-            const containerCenter = containerWidth / 2;
-            const distance = Math.abs(slideCenter - containerCenter);
-            
-            if (distance < minDistance) {
-                minDistance = distance;
-                currentIndex = index;
-            }
-        });
-        
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === currentIndex);
-        });
-        currentSlide = currentIndex;
-    }
+  function updateActiveDot() {
+    if (!sliderContainer || !slides.length) return;
+    const containerWidth = sliderContainer.offsetWidth;
 
-    // Auto-play slider - scrolls automatically
-    function startAutoPlay() {
-        slideInterval = setInterval(() => {
-            if (!sliderContainer || !slides.length) return;
-            currentSlide = (currentSlide + 1) % totalSlides;
-            const targetSlide = slides[currentSlide];
-            if (targetSlide && sliderContainer) {
-                sliderContainer.scrollTo({
-                    left: targetSlide.offsetLeft,
-                    behavior: 'smooth'
-                });
-            }
-        }, 5000); // Change slide every 5 seconds
-    }
+    let currentIndex = 0;
+    let minDistance = Infinity;
 
-    // Dot click handlers - scroll to slide
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            if (!sliderContainer || !slides.length) return;
-            currentSlide = index;
-            const targetSlide = slides[index];
-            if (targetSlide && sliderContainer) {
-                sliderContainer.scrollTo({
-                    left: targetSlide.offsetLeft,
-                    behavior: 'smooth'
-                });
-            }
-            clearInterval(slideInterval);
-            startAutoPlay();
-        });
+    slides.forEach((slide, index) => {
+      const slideLeft = slide.offsetLeft - sliderContainer.scrollLeft;
+      const slideCenter = slideLeft + slide.offsetWidth / 2;
+      const containerCenter = containerWidth / 2;
+      const distance = Math.abs(slideCenter - containerCenter);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        currentIndex = index;
+      }
     });
 
-    // Update dots on scroll
-    if (sliderContainer) {
-        sliderContainer.addEventListener('scroll', () => {
-            clearInterval(slideInterval);
-            updateActiveDot();
-            startAutoPlay();
-        });
-    }
+    dots.forEach((dot, index) => {
+      dot.classList.toggle("active", index === currentIndex);
+    });
+    currentSlide = currentIndex;
+  }
 
-    // Initialize
-    updateActiveDot();
-    startAutoPlay();
+  function startAutoPlay() {
+    slideInterval = setInterval(() => {
+      if (!sliderContainer || !slides.length) return;
+      currentSlide = (currentSlide + 1) % totalSlides;
+      const targetSlide = slides[currentSlide];
+      if (targetSlide && sliderContainer) {
+        sliderContainer.scrollTo({
+          left: targetSlide.offsetLeft,
+          behavior: "smooth",
+        });
+      }
+    }, 5000);
+  }
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      if (!sliderContainer || !slides.length) return;
+      currentSlide = index;
+      const targetSlide = slides[index];
+      if (targetSlide && sliderContainer) {
+        sliderContainer.scrollTo({
+          left: targetSlide.offsetLeft,
+          behavior: "smooth",
+        });
+      }
+      clearInterval(slideInterval);
+      startAutoPlay();
+    });
+  });
+
+  if (sliderContainer) {
+    sliderContainer.addEventListener("scroll", () => {
+      clearInterval(slideInterval);
+      updateActiveDot();
+      startAutoPlay();
+    });
+  }
+
+  updateActiveDot();
+  startAutoPlay();
 }
 
 // ============================================
-// Render Categories
+// Render Categories (still mock)
 // ============================================
 
 function renderCategories() {
-    const container = document.getElementById('categoriesContainer');
-    
-    mockData.categories.forEach(category => {
-        const card = document.createElement('div');
-        card.className = 'category-card';
-        card.innerHTML = `
-            <div class="category-image" style="background: ${category.image};">
-                ${category.namePersian}
-            </div>
-            <div class="category-info">
-                <div class="category-title-persian">${category.namePersian}</div>
-                <div class="category-title-english">${category.nameEnglish}</div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
+  const container = document.getElementById("categoriesContainer");
+  if (!container) return;
+
+  mockData.categories.forEach((category) => {
+    const card = document.createElement("div");
+    card.className = "category-card";
+    card.innerHTML = `
+      <div class="category-image" style="${
+        category.image?.startsWith('/static/')
+            ? `background-image:url('${category.image}'); background-size:cover; background-position:center;`
+            : `background:${category.image};`
+      }"></div>
+    `;
+    container.appendChild(card);
+  });
 }
 
 // ============================================
-// Render Products Carousel
+// Render Products Carousel (from API best_sellers)
 // ============================================
 
-function renderProducts() {
-    const container = document.getElementById('productsCarousel');
-    
-    mockData.products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-            <div class="product-image-wrapper">
-                ${createPlaceholderImage(product.image).outerHTML}
-                <button class="product-favorite" aria-label="افزودن به علاقه‌مندی‌ها">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="product-info">
-                <div class="product-name">${product.name}</div>
-                <div class="product-price">${formatPrice(product.price)}</div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
+function renderProducts(products) {
+  const container = document.getElementById("productsCarousel");
+  if (!container) return;
 
-    // Favorite button handlers
-    container.querySelectorAll('.product-favorite').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            btn.classList.toggle('active');
-        });
+  setHTML(
+    container,
+    (products || [])
+      .map(
+        (product) => `
+        <div class="product-card">
+          <div class="product-image-wrapper">
+            ${createMediaHTML(product.image_url, product.title)}
+            <button class="product-favorite" aria-label="افزودن به علاقه‌مندی‌ها">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <div class="product-name">${product.title ?? ""}</div>
+            <div class="product-price">${formatPrice(product.price)}</div>
+          </div>
+        </div>
+      `
+      )
+      .join("")
+  );
+
+  container.querySelectorAll(".product-favorite").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      btn.classList.toggle("active");
     });
+  });
 }
 
 // ============================================
-// Render Styles Carousel
+// Render Styles Carousel (from API styles)
 // ============================================
 
-function renderStyles() {
-    const container = document.getElementById('stylesCarousel');
-    
-    mockData.styles.forEach(style => {
-        const card = document.createElement('div');
-        card.className = 'style-card';
-        card.innerHTML = `
-            <div class="product-image-wrapper">
-                ${createPlaceholderImage(style.image).outerHTML}
-                <button class="product-favorite" aria-label="افزودن به علاقه‌مندی‌ها">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="style-info">
-                <div class="style-name">${style.name}</div>
-                <div class="style-description">${style.description}</div>
-                <div class="style-price">${formatPrice(style.price)}</div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
+function renderStyles(styles) {
+  const container = document.getElementById("stylesCarousel");
+  if (!container) return;
 
-    // Favorite button handlers
-    container.querySelectorAll('.product-favorite').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            btn.classList.toggle('active');
-        });
+  setHTML(
+    container,
+    (styles || [])
+      .map(
+        (style) => `
+        <div class="style-card">
+          <div class="product-image-wrapper">
+            ${createMediaHTML(style.image_url, style.title)}
+            <button class="product-favorite" aria-label="افزودن به علاقه‌مندی‌ها">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="style-info">
+            <div class="style-name">${style.title ?? ""}</div>
+            <div class="style-description">${style.description ?? ""}</div>
+            <div class="style-price">${formatPrice(style.price)}</div>
+          </div>
+        </div>
+      `
+      )
+      .join("")
+  );
+
+  container.querySelectorAll(".product-favorite").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      btn.classList.toggle("active");
     });
+  });
 }
 
 // ============================================
-// Render Sellers Carousel
+// Render Sellers Carousel (from API vendors)
 // ============================================
 
-function renderSellers() {
-    const container = document.getElementById('sellersCarousel');
-    
-    mockData.sellers.forEach(seller => {
-        const card = document.createElement('div');
-        card.className = 'seller-card';
-        card.innerHTML = `
-            <div class="seller-image ${seller.image ? 'has-img' : ''}">
-                ${seller.image ? `<img src="${seller.image}" alt="${seller.name}" class="seller-img">` : ''}
+function renderSellers(vendors) {
+  const container = document.getElementById("sellersCarousel");
+  if (!container) return;
+
+  setHTML(
+    container,
+    (vendors || [])
+      .map(
+        (seller) => `
+        <div class="seller-card">
+          <div class="seller-image ${seller.logo_url ? "has-img" : ""}">
+            ${
+              seller.logo_url
+                ? `<img src="${seller.logo_url}" alt="${seller.name ?? ""}" class="seller-img" loading="lazy">`
+                : ""
+            }
+          </div>
+          <div class="seller-info">
+            <div class="seller-name">${seller.name ?? ""}</div>
+            <div class="seller-rating">
+              <span>⭐</span>
+              <span>${seller.rating ?? ""}</span>
             </div>
-            <div class="seller-info">
-                <div class="seller-name">${seller.name}</div>
-                <div class="seller-rating">
-                    <span>⭐</span>
-                    <span>${seller.rating}</span>
-                </div>
-                <div class="seller-satisfaction">${seller.satisfaction}% رضایت از کالا</div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
+            <div class="seller-satisfaction">${seller.satisfaction_percent ?? ""}% رضایت از کالا</div>
+          </div>
+        </div>
+      `
+      )
+      .join("")
+  );
 }
 
 // ============================================
-// Carousel Navigation Functions
+// Carousel Navigation Functions (FINAL RTL-FIXED VERSION)
 // ============================================
 
 function initCarousel(carouselId, prevBtnId, nextBtnId) {
-    const carousel = document.getElementById(carouselId);
-    const prevBtn = document.getElementById(prevBtnId);
-    const nextBtn = document.getElementById(nextBtnId);
+  const carousel = document.getElementById(carouselId);
+  const prevBtn = document.getElementById(prevBtnId);
+  const nextBtn = document.getElementById(nextBtnId);
 
-    if (!carousel || !prevBtn || !nextBtn) return;
+  if (!carousel || !prevBtn || !nextBtn) {
+    console.warn(`Carousel initialization failed for: ${carouselId}`);
+    return;
+  }
 
-    const scrollAmount = 300; // Pixels to scroll
+  // A helper to check if an element is RTL.
+  const isRTL = getComputedStyle(carousel).direction === 'rtl';
 
-    prevBtn.addEventListener('click', () => {
-        carousel.scrollBy({
-            left: -scrollAmount,
-            behavior: 'smooth'
-        });
+  const scrollCarousel = (direction) => {
+    const firstCard = carousel.querySelector('div[class*="-card"]');
+    if (!firstCard) return;
+
+    // The distance to scroll is one card's width plus the gap.
+    const scrollAmount = firstCard.offsetWidth + 16;
+    
+    // In RTL, the scroll direction is inverted.
+    const scrollDirection = isRTL ? -direction : direction;
+
+    carousel.scrollBy({
+      left: scrollAmount * scrollDirection,
+      behavior: "smooth",
     });
+  };
 
-    nextBtn.addEventListener('click', () => {
-        carousel.scrollBy({
-            left: scrollAmount,
-            behavior: 'smooth'
-        });
-    });
+  prevBtn.addEventListener("click", () => {
+    scrollCarousel(-1); // Scroll "back"
+  });
 
-    // Show/hide navigation buttons based on scroll position
-    function updateNavButtons() {
-        const isAtStart = carousel.scrollLeft <= 10;
-        const isAtEnd = carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 10;
-        
-        prevBtn.style.opacity = isAtStart ? '0.5' : '1';
-        nextBtn.style.opacity = isAtEnd ? '0.5' : '1';
-        
-        prevBtn.disabled = isAtStart;
-        nextBtn.disabled = isAtEnd;
+  nextBtn.addEventListener("click", () => {
+    scrollCarousel(1); // Scroll "forward"
+  });
+
+  const updateNavButtons = () => {
+    // A small tolerance for floating point inaccuracies.
+    const tolerance = 10;
+    
+    let isAtStart, isAtEnd;
+
+    if (isRTL) {
+      // In RTL (for modern browsers like Chrome/Firefox):
+      // Start (right edge) is scrollLeft near 0.
+      // End (left edge) is scrollLeft near -(scrollWidth - clientWidth).
+      isAtStart = Math.abs(carousel.scrollLeft) < tolerance;
+      isAtEnd = Math.abs(carousel.scrollLeft + (carousel.scrollWidth - carousel.clientWidth)) < tolerance;
+    } else {
+      // In LTR:
+      // Start (left edge) is scrollLeft near 0.
+      // End (right edge) is scrollLeft near (scrollWidth - clientWidth).
+      isAtStart = carousel.scrollLeft < tolerance;
+      isAtEnd = Math.abs(carousel.scrollWidth - carousel.clientWidth - carousel.scrollLeft) < tolerance;
     }
+    
+    // Disable buttons and change opacity based on position.
+    prevBtn.disabled = isAtStart;
+    nextBtn.disabled = isAtEnd;
+    prevBtn.style.opacity = isAtStart ? "0.3" : "1";
+    nextBtn.style.opacity = isAtEnd ? "0.3" : "1";
+  };
+  
+  // Use a single, reliable MutationObserver to wait for cards to be added.
+  const observer = new MutationObserver((mutations) => {
+    // We only need to run this once after the first batch of cards is added.
+    if (mutations.some(m => m.addedNodes.length > 0)) {
+        updateNavButtons();
+        // Optional: you could disconnect the observer if content doesn't change later.
+        // observer.disconnect();
+    }
+  });
 
-    carousel.addEventListener('scroll', updateNavButtons);
-    updateNavButtons();
+  observer.observe(carousel, { childList: true });
 
-    // Also check on resize
-    window.addEventListener('resize', updateNavButtons);
+  // Add listeners for user interaction and window resizing.
+  carousel.addEventListener("scroll", updateNavButtons);
+  window.addEventListener("resize", updateNavButtons);
+  
+  // Initial check in case content is already there (less likely with async data).
+  updateNavButtons();
 }
+
 
 // ============================================
 // Support Form Handler
 // ============================================
 
 function initSupportForm() {
-    const form = document.querySelector('.support-form');
-    if (!form) return;
+  const form = document.querySelector(".support-form");
+  if (!form) return;
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = form.querySelector('.support-email-input').value;
-        if (email) {
-            alert('ایمیل شما با موفقیت ثبت شد!');
-            form.reset();
-        }
-    });
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = form.querySelector(".support-email-input").value;
+    if (email) {
+      alert("ایمیل شما با موفقیت ثبت شد!");
+      form.reset();
+    }
+  });
 }
 
 // ============================================
@@ -444,47 +439,64 @@ function initSupportForm() {
 // ============================================
 
 function initSearch() {
-    const searchBtn = document.querySelector('.search-btn');
-    const searchInput = document.querySelector('.search-input');
+  const searchBtn = document.querySelector(".search-btn");
+  const searchInput = document.querySelector(".search-input");
 
-    if (!searchBtn || !searchInput) return;
+  if (!searchBtn || !searchInput) return;
 
-    const handleSearch = () => {
-        const query = searchInput.value.trim();
-        if (query) {
-            console.log('جستجو برای:', query);
-            // Here you would implement actual search logic
-            alert(`در حال جستجو برای: ${query}`);
-        }
-    };
+  const handleSearch = () => {
+    const query = searchInput.value.trim();
+    if (query) {
+      console.log("جستجو برای:", query);
+      alert(`در حال جستجو برای: ${query}`);
+    }
+  };
 
-    searchBtn.addEventListener('click', handleSearch);
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
-    });
+  searchBtn.addEventListener("click", handleSearch);
+  searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") handleSearch();
+  });
 }
 
 // ============================================
-// Initialize Everything on DOM Load
+// Initialize Everything on DOM Load (FIXED VERSION)
 // ============================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Render dynamic content
-    renderCategories();
-    renderProducts();
-    renderStyles();
-    renderSellers();
+document.addEventListener("DOMContentLoaded", async () => {
+  // Render static/mock content first
+  renderCategories();
+  
+  // Initialize features that don't depend on API data
+  initHeroSlider();
+  initSupportForm();
+  initSearch();
 
-    // Initialize interactive features
-    initHeroSlider();
-    initCarousel('productsCarousel', 'productsPrev', 'productsNext');
-    initCarousel('stylesCarousel', 'stylesPrev', 'stylesNext');
-    initCarousel('sellersCarousel', 'sellersPrev', 'sellersNext');
-    initSupportForm();
-    initSearch();
+  // Fetch + render backend data
+  try {
+    console.log("Fetching home data from API...");
+    const data = await fetchHomeData();
+    console.log("HOME API DATA:", data);
 
-    console.log('FASHNEX homepage initialized successfully!');
+    // --- RENDER CONTENT AND THEN INITIALIZE CAROUSEL FOR EACH SECTION ---
+
+    // 1. Render Products and THEN initialize its carousel
+    renderProducts(data.best_sellers || []);
+    initCarousel("productsCarousel", "productsPrev", "productsNext");
+
+    // 2. Render Styles and THEN initialize its carousel
+    renderStyles(data.styles || []);
+    initCarousel("stylesCarousel", "stylesPrev", "stylesNext");
+
+    // 3. Render Sellers and THEN initialize its carousel
+    renderSellers(data.vendors || []);
+    initCarousel("sellersCarousel", "sellersPrev", "sellersNext");
+
+    console.log("FASHNEX homepage initialized successfully (API)!");
+  } catch (err) {
+    console.error("Failed to load homepage data:", err);
+    // In case of an error, you might want to render empty states
+    renderProducts([]);
+    renderStyles([]);
+    renderSellers([]);
+  }
 });
-

@@ -1,0 +1,29 @@
+<main class="auth-page">
+    <section class="auth-card">
+        <h1 class="auth-title">بازیابی رمز عبور (مرحله ۲)</h1>
+        <p>کد ۵ رقمی ارسال شده را وارد کنید.</p>
+        <p>(کد MVP: 00000)</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div id="timer" style="text-align: center; margin: 1rem 0; font-weight: bold;"></div>
+            <div class="auth-actions">
+                <button type="submit" class="btn-primary">تایید کد</button>
+            </div>
+        </form>
+    </section>
+</main>
+
+<script>
+    let timeLeft = {{ remaining_time }};
+    const timerElement = document.getElementById('timer');
+    const interval = setInterval(() => {
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            timerElement.textContent = 'زمان به پایان رسید!';
+        } else {
+            timerElement.textContent = `زمان باقی‌مانده: ${timeLeft} ثانیه`;
+            timeLeft--;
+        }
+    }, 1000);
+</script>

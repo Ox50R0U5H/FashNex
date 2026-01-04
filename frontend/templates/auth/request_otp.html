@@ -1,0 +1,14 @@
+<!-- این صفحه شبیه password_reset_form.html است -->
+<main class="auth-page">
+    <section class="auth-card">
+        <h1 class="auth-title">بازیابی رمز عبور (مرحله ۱)</h1>
+        <p>لطفا ایمیلی که با آن ثبت‌نام کرده‌اید را وارد کنید.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="auth-actions">
+                <button type="submit" class="btn-primary">دریافت کد تایید</button>
+            </div>
+        </form>
+    </section>
+</main>

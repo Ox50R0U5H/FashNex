@@ -1,17 +1,126 @@
-{% extends "base.html" %}
-{% block content %}
-<section class="auth">
-  <h2>ورود</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">ورود</button>
-  </form>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود - FASHNEX</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <style>
+        /* --- استایل‌های هدر برای صفحه ورود --- */
+        .top-navbar .logo {
+            position: static;
+            transform: none;
+        }
 
-  <p>
-    حساب نداری؟
-    <a href="{% url 'users:signup_customer' %}">ثبت‌نام کاربر</a> |
-    <a href="{% url 'users:signup_seller' %}">ثبت‌نام فروشنده</a>
-  </p>
-</section>
-{% endblock %}
+        /* --- ۱. رفع مشکل فضای خالی پایین صفحه (Sticky Footer) --- */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 0 !important;
+        }
+        main.auth-page {
+            flex-grow: 1;
+        }
+
+        /* --- ۲. کاهش فضای خالی کنار فرم --- */
+        /* این کد عرض کانتینر فرم را بهتر مدیریت می‌کند تا در اکثر دستگاه‌ها ظاهر بهتری داشته باشد */
+        main.auth-page {
+            width: 100%;
+            max-width: 480px; /* افزایش حداکثر عرض برای ظاهر بهتر */
+            padding: 0 24px;  /* تنظیم فاصله از لبه‌ها */
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <img src="/static/images/logo/logo.png" alt="FASHNEX Logo" class="logo-image">
+            </div>
+            <a href="{% url 'users:signup_customer' %}" class="login-btn">ثبت نام</a>
+        </div>
+    </nav>
+
+    <main class="auth-page">
+        <section class="auth-card">
+            <h1 class="auth-title">ورود</h1>
+
+            <!-- ۳. اصلاح نحوه نمایش خطا برای حذف نقطه -->
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label for="id_username">ایمیل</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="field-errors">{{ form.username.errors }}</div>
+                {% endif %}
+
+                <label for="id_password">رمز عبور</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="field-errors">{{ form.password.errors }}</div>
+                {% endif %}
+
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <div class="auth-actions">
+                    <button type="submit" class="btn-primary">ورود</button>
+                </div>
+            </form>
+
+            <p class="auth-helper">حساب ندارید؟ <a href="{% url 'users:signup_customer' %}">ثبت نام</a></p>
+            <p class="auth-helper">می‌خواهید فروشنده شوید؟ <a href="{% url 'users:signup_seller' %}">ثبت نام فروشنده</a></p>
+            <p class="auth-helper" style="text-align: center; margin-top: 1rem;">
+                <a href="{% url 'users:password_reset_otp_request' %}">رمز عبور خود را فراموش کرده‌اید؟</a>
+            </p>
+        </section>
+    </main>
+
+    <!-- فوتر کامل از صفحه اصلی -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2 class="footer-logo">FASHNEX</h2>
+                <p class="footer-about">
+                    یک پلتفرم پیشنهاد استایل با هوش مصنوعی است که بر اساس سلیقه، هدف و بودجه، بهترین ترکیب‌ها را از بین محصولات فروشندگان پیشنهاد می‌دهد.
+                </p>
+            </div>
+            <div class="footer-contact">
+                <h3 class="footer-title">تماس با ما</h3>
+                <p class="contact-info">تلفن تماس: 07123456</p>
+                <p class="contact-info">ایمیل: FASHNEX2026@gmail.com</p>
+            </div>
+            <div class="footer-social">
+                <h3 class="footer-title">در صفحات اجتماعی همراه ما باشید</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon" aria-label="تلگرام">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.13-.31-1.09-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="اینستاگرام">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="یوتیوب">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

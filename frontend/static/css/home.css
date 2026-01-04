@@ -1487,4 +1487,80 @@ body {
   display: block;
 }
 
+/* ============================================
+   Auth (Login / Signup) styles
+   ============================================ */
+.auth-page {
+    max-width: 420px;
+    margin: 48px auto;
+    padding: 0 16px;
+}
+
+.auth-card {
+    background: #fff;
+    padding: 28px;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(27, 60, 83, 0.06);
+}
+
+.auth-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1B3C53;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.auth-card label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #456882;
+}
+
+.auth-card input[type="text"],
+.auth-card input[type="email"],
+.auth-card input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #E9E2DA;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #1B3C53;
+    background: #fff;
+}
+
+.auth-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.form-errors {
+    background: #ffecec;
+    color: #8b1e1e;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.field-errors {
+    color: #8b1e1e;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.auth-helper {
+    text-align: center;
+    margin-top: 12px;
+    color: #456882;
+    font-size: 13px;
+}
+
+@media (min-width: 768px) {
+    .auth-page { margin: 72px auto; }
+}
 

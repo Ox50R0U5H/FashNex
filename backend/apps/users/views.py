@@ -1,14 +1,16 @@
 import time
+from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect, render
 from .forms import CustomerSignUpForm, SellerSignUpForm, LoginForm
 from django.shortcuts import redirect
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-from django.contrib.auth.forms import SetPasswordForm
-from .forms import RequestOTPForm, VerifyOTPForm
+from .forms import RequestOTPForm, LoginForm, VerifyOTPForm, CustomSetPasswordForm
 from .models import User
+from django.http import JsonResponse
+from django.views import View
 
 
 
@@ -38,13 +40,22 @@ def signup_seller(request):
 
 class UserLoginView(LoginView):
     template_name = "auth/login.html"
-    authentication_form = LoginForm
+    form_class = LoginForm
+    redirect_authenticated_user = True # اگر کاربر لاگین بود، به صفحه اصلی ریدایرکت شود
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        
+        # نمایش نام کاربر یا نام کاربری در پیام
+        user = self.request.user
+        display_name = user.first_name or user.username
+        messages.success(self.request, f"خوش اومدی {display_name}!")
+        
+        return response
 
     def get_success_url(self):
-        user = self.request.user
-        if getattr(user, "role", "") == "seller":
-            return "/seller/"
-        return "/"
+        # آدرس صفحه اصلی را به عنوان مقصد بعد از لاگین مشخص می‌کنیم
+        return "/" 
 class RequestOTPView(FormView):
     """ مرحله ۱: دریافت ایمیل از کاربر """
     template_name = "auth/request_otp.html"
@@ -111,7 +122,7 @@ class VerifyOTPView(FormView):
 class ResetPasswordView(FormView):
     """ مرحله ۳: تنظیم رمز عبور جدید """
     template_name = "auth/set_new_password.html"
-    form_class = SetPasswordForm
+    form_class = CustomSetPasswordForm 
     success_url = reverse_lazy("users:login")
 
     def dispatch(self, request, *args, **kwargs):
@@ -131,3 +142,18 @@ class ResetPasswordView(FormView):
         # پاک کردن تمام اطلاعات سشن بعد از اتمام کار
         self.request.session.flush()
         return super().form_valid(form)
+    
+class UserLogoutView(LogoutView):
+    """
+    کاربر را از سیستم خارج کرده و به صفحه اصلی هدایت می‌کند.
+    """
+    next_page = '/'  # بعد از خروج، به صفحه اصلی برو
+
+    def dispatch(self, request, *args, **kwargs):
+        # قبل از خروج، یک پیام نمایش می‌دهیم
+        if request.user.is_authenticated:
+            # استفاده از get_user_model برای دسترسی به کاربر
+            display_name = request.user.first_name or request.user.username
+            messages.success(request, f"با موفقیت از حساب خود خارج شدید .")
+        return super().dispatch(request, *args, **kwargs)
+    

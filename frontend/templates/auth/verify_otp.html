@@ -1,29 +1,72 @@
-<main class="auth-page">
-    <section class="auth-card">
-        <h1 class="auth-title">بازیابی رمز عبور (مرحله ۲)</h1>
-        <p>کد ۵ رقمی ارسال شده را وارد کنید.</p>
-        <p>(کد MVP: 00000)</p>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <div id="timer" style="text-align: center; margin: 1rem 0; font-weight: bold;"></div>
-            <div class="auth-actions">
-                <button type="submit" class="btn-primary">تایید کد</button>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تایید کد - FASHNEX</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <style>
+        .top-navbar .logo { position: static; transform: none; }
+        body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 0 !important; }
+        main.auth-page { flex-grow: 1; width: 100%; max-width: 480px; padding: 0 24px; }
+    </style>
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <img src="/static/images/logo/logo.png" alt="FASHNEX Logo" class="logo-image">
             </div>
-        </form>
-    </section>
-</main>
+            <a href="{% url 'users:login' %}" class="login-btn">ورود</a>
+        </div>
+    </nav>
 
-<script>
-    let timeLeft = {{ remaining_time }};
-    const timerElement = document.getElementById('timer');
-    const interval = setInterval(() => {
-        if (timeLeft <= 0) {
-            clearInterval(interval);
-            timerElement.textContent = 'زمان به پایان رسید!';
-        } else {
-            timerElement.textContent = `زمان باقی‌مانده: ${timeLeft} ثانیه`;
-            timeLeft--;
+    <main class="auth-page">
+        <section class="auth-card">
+            <h1 class="auth-title">تایید کد</h1>
+            <p style="text-align: center; margin-bottom: 1rem;">کد ۵ رقمی ارسال شده را وارد کنید. <br> (در حالت تست، کد <strong style="color: #c0392b;">00000</strong> را وارد کنید)</p>
+            
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <label for="id_otp_code">کد تایید</label>
+                {{ form.otp_code }}
+                {% if form.otp_code.errors %}<div class="field-errors">{{ form.otp_code.errors }}</div>{% endif %}
+
+                <div id="timer" style="text-align: center; margin: 1rem 0; font-weight: bold; color: #555;"></div>
+                
+                <div class="auth-actions">
+                    <button type="submit" class="btn-primary">تایید و ادامه</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <!-- محتوای کامل فوتر را اینجا کپی کنید (از فایل login.html) -->
+    </footer>
+
+    <script>
+        let timeLeft = {{ remaining_time }};
+        const timerElement = document.getElementById('timer');
+        if (timerElement) {
+            const interval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    timerElement.textContent = 'زمان به پایان رسید! لطفا دوباره تلاش کنید.';
+                    timerElement.style.color = '#c0392b';
+                } else {
+                    timerElement.textContent = `زمان باقی‌مانده: ${timeLeft} ثانیه`;
+                    timeLeft--;
+                }
+            }, 1000);
         }
-    }, 1000);
-</script>
+    </script>
+</body>
+</html>

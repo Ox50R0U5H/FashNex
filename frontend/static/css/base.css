@@ -62,3 +62,59 @@ select {
     outline-offset: 2px;
 }
 
+
+.messages-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050;
+    width: 90%;
+    max-width: 500px;
+}
+
+.message {
+    padding: 15px 20px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    color: #fff;
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInDown 0.5s forwards;
+}
+
+.message.success {
+    background-color: #27ae60; /* رنگ سبز */
+}
+
+.message.error {
+    background-color: #c0392b; /* رنگ قرمز */
+}
+
+@keyframes fadeInDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-left: 8px; /* فاصله از متن دکمه */
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

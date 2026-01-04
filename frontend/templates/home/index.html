@@ -11,20 +11,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    {% if messages %}
+        <div class="messages-container" style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 1050; width: 90%; max-width: 450px;">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}" style="padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: 8px; color: #fff; text-align: center; font-size: 1rem; font-weight: 500; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background-color: #27ae60; opacity: 0; transform: translateY(-20px); animation: fadeInDown 0.5s 0.2s forwards;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        <script>
+            // اسکریپت برای محو کردن خودکار پیام بعد از چند ثانیه
+            setTimeout(function() {
+                const messagesContainer = document.querySelector('.messages-container');
+                if (messagesContainer) {
+                    messagesContainer.style.transition = 'opacity 0.5s';
+                    messagesContainer.style.opacity = '0';
+                    setTimeout(() => messagesContainer.remove(), 500);
+                }
+            }, 3000); // ۳ ثانیه
+        </script>
+    {% endif %}
     <!-- (A) Top Navbar -->
     <nav class="top-navbar">
         <div class="navbar-container">
-            <button class="nav-icon-btn cart-btn" aria-label="سبد خرید">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <path d="M16 10a4 4 0 0 1-8 0"></path>
-                </svg>
-            </button>
-            <div class="logo">
-                <img src="../../static/images/logo/logo.png" alt="FASHNEX Logo" class="logo-image">
-            </div>
-            <a href="{% url 'users:login' %}" class="login-btn">ورود / ثبت نام</a>
+            {% if user.is_authenticated %}
+                <button class="nav-icon-btn cart-btn" aria-label="سبد خرید">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                </button>
+                <!-- حالت ورود کرده -->
+                <div></div> <!-- جداکننده سمت راست برای حفظ چیدمان -->
+                <div class="logo">
+                    <img src="/static/images/logo/logo.png" alt="FASHNEX Logo" class="logo-image">
+                </div>
+                <div class="user-actions">
+                    <span class="user-welcome">سلام، {{ user.first_name|default:user.username }}!</span>
+                    <form action="{% url 'users:logout' %}" method="post" style="display:inline">
+                        {% csrf_token %}
+                        <button type="submit" class="login-btn logout-btn">خروج</button>
+                    </form>
+                </div>
+            {% else %}
+                <button class="nav-icon-btn cart-btn" aria-label="سبد خرید">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                </button>
+                <!-- حالت عادی (کد اصلی شما) -->
+                <div></div>
+                <div class="logo">
+                    <img src="/static/images/logo/logo.png" alt="FASHNEX Logo" class="logo-image">
+                </div>
+                <a href="{% url 'users:login' %}" class="login-btn">ورود / ثبت نام</a>
+            {% endif %}
         </div>
     </nav>
 
@@ -174,14 +218,6 @@
         <section class="support-section">
             <img class="support-corner-logo" src="/static/images/logo/logo.png" alt="FashNex">
             <div class="support-container">
-                <div class="support-logo">
-                    <div class="logo-circle">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M5 7h14l-1 10H6L5 7zM9 11v6M15 11v6M12 3v4"/>
-                        </svg>
-                        <span class="logo-text-small">FashNex</span>
-                    </div>
-                </div>
                 <div class="support-content">
                     <h3 class="support-title">پشتیبانی</h3>
                     <p class="support-desc">ایمیل خود را وارد کنید تا با شما در ارتباط باشیم.</p>

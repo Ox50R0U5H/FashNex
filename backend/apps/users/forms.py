@@ -1,6 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, SetPasswordForm
 from django.core.exceptions import ValidationError
+from django.contrib.auth.views import LoginView
 
 from .models import User
 
@@ -93,3 +95,41 @@ class RequestOTPForm(forms.Form):
 
 class VerifyOTPForm(forms.Form):
     otp_code = forms.CharField(label="کد تایید", max_length=5, widget=forms.TextInput(attrs={'placeholder': 'کد ۵ رقمی'}))
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label="رمز عبور جدید",
+        widget=forms.PasswordInput,
+        help_text=(
+            "<ul>"
+            "<li>رمز عبور شما باید حداقل ۸ کاراکتر باشد.</li>"
+            "<li>رمز عبور شما نمی‌تواند یک رمز عبور رایج باشد.</li>"
+            "<li>رمز عبور شما نمی‌تواند کاملاً عددی باشد.</li>"
+            "</ul>"
+        )
+    )
+    new_password2 = forms.CharField(
+        label="تایید رمز عبور جدید",
+        widget=forms.PasswordInput
+    )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.error_messages['password_mismatch'] = "دو رمز عبور وارد شده با هم تطابق ندارند."
+        self.error_messages['password_too_short'] = "رمز عبور باید حداقل ۸ کاراکتر باشد."
+
+
+class UserLoginView(LoginView):
+    template_name = "auth/login.html"
+    form_class = LoginForm
+    redirect_authenticated_user = True
+
+    # VVVV این متد را اضافه کنید VVVV
+    def form_valid(self, form):
+        # ابتدا متد اصلی را فراخوانی می‌کنیم تا کاربر لاگین شود
+        response = super().form_valid(form)
+        
+        # حالا پیام موفقیت را اضافه می‌کنیم
+        messages.success(self.request, f"خوش آمدید، {self.request.user.first_name}!")
+        
+        return response

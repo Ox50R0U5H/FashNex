@@ -1,14 +1,53 @@
-<!-- این صفحه شبیه password_reset_form.html است -->
-<main class="auth-page">
-    <section class="auth-card">
-        <h1 class="auth-title">بازیابی رمز عبور (مرحله ۱)</h1>
-        <p>لطفا ایمیلی که با آن ثبت‌نام کرده‌اید را وارد کنید.</p>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <div class="auth-actions">
-                <button type="submit" class="btn-primary">دریافت کد تایید</button>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بازیابی رمز عبور - FASHNEX</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <style>
+        .top-navbar .logo { position: static; transform: none; }
+        body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 0 !important; }
+        main.auth-page { flex-grow: 1; width: 100%; max-width: 480px; padding: 0 24px; }
+    </style>
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <img src="/static/images/logo/logo.png" alt="FASHNEX Logo" class="logo-image">
             </div>
-        </form>
-    </section>
-</main>
+            <a href="{% url 'users:login' %}" class="login-btn">ورود</a>
+        </div>
+    </nav>
+
+    <main class="auth-page">
+        <section class="auth-card">
+            <h1 class="auth-title">بازیابی رمز عبور</h1>
+            <p style="text-align: center; margin-bottom: 1.5rem;">ایمیلی که با آن ثبت‌نام کرده‌اید را وارد کنید تا کد تایید برایتان ارسال شود.</p>
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                <label for="id_email">ایمیل</label>
+                {{ form.email }}
+                {% if form.email.errors %}<div class="field-errors">{{ form.email.errors }}</div>{% endif %}
+                
+                <div class="auth-actions">
+                    <button type="submit" class="btn-primary">دریافت کد تایید</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <!-- محتوای کامل فوتر را اینجا کپی کنید (از فایل login.html) -->
+    </footer>
+</body>
+</html>

@@ -7,86 +7,72 @@
     <link rel="stylesheet" href="/static/css/base.css">
     <link rel="stylesheet" href="/static/css/home.css">
     <style>
-        /* --- استایل‌های هدر برای صفحه ورود --- */
-        .top-navbar .logo {
-            position: static;
-            transform: none;
+        /* --- استایل‌های پایه صفحه --- */
+        .top-navbar .logo { position: static; transform: none; }
+        body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 0 !important; }
+        main.auth-page { flex-grow: 1; width: 100%; max-width: 480px; padding: 0 24px; }
+
+        /* --- CSS اسپینر - مستقیماً اینجا اضافه شده برای اطمینان --- */
+        .btn-primary .spinner {
+            display: inline-block;
+            width: 1rem; /* 16px */
+            height: 1rem; /* 16px */
+            vertical-align: -0.125em;
+            border: .2em solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spin .75s linear infinite;
+            margin-left: 0.5rem; /* فاصله از متن */
         }
 
-        /* --- ۱. رفع مشکل فضای خالی پایین صفحه (Sticky Footer) --- */
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding-bottom: 0 !important;
-        }
-        main.auth-page {
-            flex-grow: 1;
-        }
-
-        /* --- ۲. کاهش فضای خالی کنار فرم --- */
-        /* این کد عرض کانتینر فرم را بهتر مدیریت می‌کند تا در اکثر دستگاه‌ها ظاهر بهتری داشته باشد */
-        main.auth-page {
-            width: 100%;
-            max-width: 480px; /* افزایش حداکثر عرض برای ظاهر بهتر */
-            padding: 0 24px;  /* تنظیم فاصله از لبه‌ها */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <nav class="top-navbar">
         <div class="navbar-container">
-            <div class="logo">
-                <img src="/static/images/logo/logo.png" alt="FASHNEX Logo" class="logo-image">
-            </div>
-            <a href="{% url 'users:signup_customer' %}" class="login-btn">ثبت نام</a>
+            <div class="logo"><img src="/static/images/logo/logo.png" alt="FASHNEX Logo" class="logo-image"></div>
+            <a href="{% url 'users:login' %}" class="login-btn">ورود</a>
         </div>
     </nav>
 
     <main class="auth-page">
         <section class="auth-card">
             <h1 class="auth-title">ورود</h1>
-
-            <!-- ۳. اصلاح نحوه نمایش خطا برای حذف نقطه -->
+            
             {% if form.non_field_errors %}
-                <div class="form-errors">
-                    {% for error in form.non_field_errors %}
-                        {{ error }}
-                    {% endfor %}
-                </div>
+                <div class="form-errors">{% for error in form.non_field_errors %}{{ error }}{% endfor %}</div>
             {% endif %}
 
-            <form method="post">
+            <form method="post" id="login-form">
                 {% csrf_token %}
-
+                
                 <label for="id_username">ایمیل</label>
                 {{ form.username }}
-                {% if form.username.errors %}
-                    <div class="field-errors">{{ form.username.errors }}</div>
-                {% endif %}
+                {% if form.username.errors %}<div class="field-errors">{{ form.username.errors }}</div>{% endif %}
 
                 <label for="id_password">رمز عبور</label>
                 {{ form.password }}
-                {% if form.password.errors %}
-                    <div class="field-errors">{{ form.password.errors }}</div>
-                {% endif %}
+                {% if form.password.errors %}<div class="field-errors">{{ form.password.errors }}</div>{% endif %}
 
                 <input type="hidden" name="next" value="{{ next }}">
 
                 <div class="auth-actions">
-                    <button type="submit" class="btn-primary">ورود</button>
+                    <!-- ساختار دکمه ساده شده است -->
+                    <button type="submit" class="btn-primary" id="login-btn">
+                        <span>ورود</span>
+                    </button>
                 </div>
             </form>
-
+            
+            <p class="auth-helper" style="text-align: center; margin-top: 1rem;"><a href="{% url 'users:password_reset_otp_request' %}">رمز عبور خود را فراموش کرده‌اید؟</a></p>
             <p class="auth-helper">حساب ندارید؟ <a href="{% url 'users:signup_customer' %}">ثبت نام</a></p>
             <p class="auth-helper">می‌خواهید فروشنده شوید؟ <a href="{% url 'users:signup_seller' %}">ثبت نام فروشنده</a></p>
-            <p class="auth-helper" style="text-align: center; margin-top: 1rem;">
-                <a href="{% url 'users:password_reset_otp_request' %}">رمز عبور خود را فراموش کرده‌اید؟</a>
-            </p>
         </section>
     </main>
 
-    <!-- فوتر کامل از صفحه اصلی -->
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-brand">
@@ -122,5 +108,32 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const loginBtn = document.getElementById('login-btn');
+
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                // دکمه را غیرفعال کن تا از کلیک‌های متعدد جلوگیری شود
+                loginBtn.disabled = true;
+
+                // محتوای فعلی دکمه را پاک کن
+                loginBtn.innerHTML = '';
+
+                // یک اسپینر بساز
+                const spinner = document.createElement('span');
+                spinner.className = 'spinner';
+                
+                // یک متن جدید بساز
+                const btnText = document.createElement('span');
+                btnText.textContent = 'در حال بررسی...';
+
+                // اسپینر و متن جدید را به دکمه اضافه کن
+                loginBtn.appendChild(spinner);
+                loginBtn.appendChild(btnText);
+            });
+        }
+    </script>
 </body>
 </html>

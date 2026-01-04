@@ -34,6 +34,7 @@
 5.  **Apply Database Migrations:**
     This command creates the necessary tables in your database according to the models defined in the project.
     ```bash
+    cd backend
     python manage.py migrate
     ```
 

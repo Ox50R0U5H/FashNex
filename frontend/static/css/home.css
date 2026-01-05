@@ -1239,7 +1239,7 @@ body {
     }
 
     .ai-image {
-        width: 200px;
+        width: 400px;
         height: 200px;
         flex-shrink: 0;
     }
@@ -1252,21 +1252,60 @@ body {
         flex-direction: row;
     }
 
+    .categories-section {
+        margin: 48px 0;
+    }
+
     .categories-container {
-        justify-content: center;
-        flex-wrap: wrap;
-        overflow-x: visible;
+        display: grid; /* استفاده از گرید برای چیدمان */
+        /* ستون‌هایی با حداقل عرض 200 پیکسل و حداکثر عرض مساوی ایجاد می‌کند */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 24px;       /* فاصله بین کارت‌ها */
+        overflow-x: visible; /* غیرفعال کردن اسکرول افقی */
     }
 
     .category-card {
-        min-width: 180px;
-        width: 180px;
+        position: relative; /* برای قرار دادن متن روی عکس */
+        width: auto;
+        min-width: 0;
+
+        /* 
+        کلید اصلی #1: تعیین نسبت ابعاد
+        این کد کارت را مجبور می‌کند که همیشه نسبت عرض به ارتفاع 3 به 4 داشته باشد.
+        این کار از کشیده شدن کارت و بریده شدن عکس جلوگیری می‌کند.
+        */
+        aspect-ratio: 1/1;
+
+        /* برای مرتب‌سازی متن در مرکز کارت */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        /* برای گرد کردن گوشه‌ها و پنهان کردن بخش‌های اضافی عکس */
+        border-radius: 16px;
+        overflow: hidden;
+
+        color: #fff; /* رنگ متن روی کارت */
+        cursor: pointer;
+        transition: transform 0.3s;
     }
 
+    .category-card:hover {
+        transform: scale(1.05);
+    }
+
+    /* 
+    این بخش فرض می‌کند یک تگ عکس داخل یک div با کلاس category-image وجود دارد.
+    این ساختار استاندارد است.
+    */
     .category-image {
-        height: 180px;
+        position: absolute;
+        top: 10;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1; /* عکس را در لایه زیرین قرار می‌دهد */
     }
-
     .carousel-btn {
         display: flex;
     }
@@ -1332,9 +1371,9 @@ body {
     }
 
     /* Make the logo participate in normal flow (no absolute overlap) */
-    .logo {
+     .logo {
         position: static;
-        transform: none;
+        transform: translateX(110px); /* ✅ این خط لوگو را به راست منتقل می‌کند */
         width: auto;
         height: auto;
         border-radius: 8px;
@@ -1343,8 +1382,6 @@ body {
         padding: 0;
         display: flex;
         align-items: center;
-        margin-inline-start: 8px;
-        margin-inline-end: 8px;
     }
 
     .logo-image {
@@ -1362,6 +1399,26 @@ body {
     .login-btn {
         padding: 10px 20px;
         font-size: 15px;
+    }
+
+    .ai-content {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .ai-image {
+        width: 800px;
+        height: 300px;
+        flex-shrink: 0;
+        gap: 30px;
+    }
+
+    .ai-title {
+        font-size: 24px;
+    }
+
+    .ai-buttons {
+        flex-direction: row;
     }
 
     /* Center the search bar on wide screens */
@@ -1422,6 +1479,61 @@ body {
     .category-card {
         min-width: 220px;
         width: 220px;
+    }
+
+    .categories-section {
+        margin: 48px 0;
+    }
+
+    .categories-container {
+        display: grid; /* استفاده از گرید برای چیدمان */
+        /* ستون‌هایی با حداقل عرض 200 پیکسل و حداکثر عرض مساوی ایجاد می‌کند */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 24px;       /* فاصله بین کارت‌ها */
+        overflow-x: visible; /* غیرفعال کردن اسکرول افقی */
+    }
+
+    .category-card {
+        position: relative; /* برای قرار دادن متن روی عکس */
+        width: auto;
+        min-width: 0;
+
+        /* 
+        کلید اصلی #1: تعیین نسبت ابعاد
+        این کد کارت را مجبور می‌کند که همیشه نسبت عرض به ارتفاع 3 به 4 داشته باشد.
+        این کار از کشیده شدن کارت و بریده شدن عکس جلوگیری می‌کند.
+        */
+        aspect-ratio: 1/1;
+
+        /* برای مرتب‌سازی متن در مرکز کارت */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        /* برای گرد کردن گوشه‌ها و پنهان کردن بخش‌های اضافی عکس */
+        border-radius: 16px;
+        overflow: hidden;
+
+        color: #fff; /* رنگ متن روی کارت */
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    .category-card:hover {
+        transform: scale(1.05);
+    }
+
+    /* 
+    این بخش فرض می‌کند یک تگ عکس داخل یک div با کلاس category-image وجود دارد.
+    این ساختار استاندارد است.
+    */
+    .category-image {
+        position: absolute;
+        top: 10;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1; /* عکس را در لایه زیرین قرار می‌دهد */
     }
 
     /* Support section becomes a row with visible logo */

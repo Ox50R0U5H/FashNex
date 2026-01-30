@@ -24,7 +24,7 @@ const mockData = {
       id: 2,
       namePersian: "مردانه",
       nameEnglish: "MEN'S CLOTHING",
-      image: "/static/images/categories/men.png",
+      image: "/static/images/categories/men.jpg",
     },
     {
       id: 3,

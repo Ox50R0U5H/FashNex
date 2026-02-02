@@ -7,7 +7,20 @@
     <link rel="stylesheet" href="/static/css/base.css">
     <link rel="stylesheet" href="/static/css/home.css">
     <style>
-        .top-navbar .logo { position: static; transform: none; }
+        .top-navbar .navbar-container{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .top-navbar .logo{
+            margin: 0 auto;
+        }
+
+        .top-navbar .logo-image{
+            display: block; /* برای اینکه عکس وسط دقیق‌تر بشینه */
+        }
         body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 0 !important; }
         main.auth-page { flex-grow: 1; width: 100%; max-width: 480px; padding: 0 24px; }
     </style>
@@ -18,7 +31,6 @@
             <div class="logo">
                 <img src="/static/images/logo/logo.png" alt="FASHNEX Logo" class="logo-image">
             </div>
-            <a href="{% url 'users:login' %}" class="login-btn">ورود</a>
         </div>
     </nav>
 
@@ -34,7 +46,7 @@
 
             <form method="post" novalidate>
                 {% csrf_token %}
-                
+
                  <!-- ##### فیلدهای جدید نام و نام خانوادگی ##### -->
                 <label for="id_first_name">نام</label>
                 {{ form.first_name }}
@@ -51,7 +63,6 @@
                 <label for="id_email">ایمیل</label>
                 {{ form.email }}
                 {% if form.email.errors %}<div class="field-errors">{{ form.email.errors }}</div>{% endif %}
-                
                 
                 <!-- فیلدهای رمز عبور -->
                 <label for="id_password1">رمز عبور</label>

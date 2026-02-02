@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HomeStyle, HomeVendor, HomeBestSeller
+from .models import HomeStyle, HomeVendor, HomeBestSeller, SupportEmail
 
 
 @admin.register(HomeStyle)
@@ -26,3 +26,10 @@ class HomeBestSellerAdmin(admin.ModelAdmin):
     list_filter = ("is_active",)
     search_fields = ("title",)
     ordering = ("order", "-id")
+
+@admin.register(SupportEmail)
+class SupportEmailAdmin(admin.ModelAdmin):
+    list_display = ("email", "is_active", "created_at")
+    list_filter = ("is_active", "created_at")
+    search_fields = ("email",)
+    ordering = ("-created_at",)

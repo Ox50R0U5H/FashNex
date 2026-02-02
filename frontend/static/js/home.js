@@ -420,19 +420,57 @@ function initCarousel(carouselId, prevBtnId, nextBtnId) {
 // Support Form Handler
 // ============================================
 
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 function initSupportForm() {
   const form = document.querySelector(".support-form");
   if (!form) return;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = form.querySelector(".support-email-input").value;
-    if (email) {
-      alert("ایمیل شما با موفقیت ثبت شد!");
-      form.reset();
+
+    const emailInput = form.querySelector(".support-email-input");
+    const email = (emailInput?.value || "").trim();
+    if (!email) return;
+
+    try {
+      const res = await fetch("/api/subscribe/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.ok) {
+        alert(data.message || "ایمیل ثبت شد");
+        form.reset();
+      } else {
+        alert(data.message || `خطا (${res.status})`);
+      }
+    } catch (err) {
+      alert("ارتباط با سرور برقرار نشد");
+      console.error(err);
     }
   });
 }
+
 
 // ============================================
 // Search Functionality
